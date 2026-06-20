@@ -34,37 +34,72 @@ interface SkillCategory {
   tools: string[];
 }
 
+interface BugLog {
+  id: string;
+  title: string;
+  severity: "CRITICAL" | "HIGH";
+  status: "RESOLVED" | "CLOSED";
+  environment: string;
+}
+
+const BUG_LOGS: BugLog[] = [
+  {
+    id: "BUG-2401",
+    title: "Missed decimal calculation in Labamu Singapore dashboard revenue tracking",
+    severity: "HIGH",
+    status: "RESOLVED",
+    environment: "SIT",
+  },
+  {
+    id: "BUG-2402",
+    title: "Asynchronous processing timeout during PayNow QR code generation under heavy load",
+    severity: "CRITICAL",
+    status: "RESOLVED",
+    environment: "UAT",
+  },
+  {
+    id: "BUG-2403",
+    title: "Retry logic failure on Bank Mandiri KPR Loan Origination workflow routing",
+    severity: "HIGH",
+    status: "CLOSED",
+    environment: "PTR Test",
+  },
+];
+
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const PROJECTS: Project[] = [
   {
-    id: "QA-4821",
-    name: "E-Commerce Checkout Flow",
-    summary: "End-to-end regression suite for multi-currency payment gateway integration across 14 locales.",
-    frameworks: ["Selenium", "TestNG", "Allure"],
+    id: "QA-9001",
+    name: "E-Commerce & POS Cashier Flow",
+    summary: "Managed full-flow tests covering checkout, payment routing and POS cashier reconciliation.",
+    frameworks: ["Manual QA", "JIRA", "Regression"],
     status: "PASSED",
-    impact: "Reduced release defect rate by 78% over 3 sprints",
-    assignee: "A. Rivera",
+    impact:
+      "Managed comprehensive Sanity, SIT, UAT, and Production Test Review (PTR) for core e-commerce modules and POS cashier systems.",
+    assignee: "Muhammad Raihan",
     priority: "CRITICAL",
   },
   {
-    id: "QA-3904",
-    name: "Mobile Banking API Suite",
-    summary: "Contract-driven API validation for REST endpoints with schema drift detection and load profiling.",
-    frameworks: ["Postman", "Newman", "k6"],
-    status: "RETRIED",
-    impact: "Caught 23 breaking changes before production merge",
-    assignee: "A. Rivera",
+    id: "QA-9002",
+    name: "Core Banking Workflow & Loan Origination",
+    summary: "Workflow validations across posting, loan origination and downstream posting flows.",
+    frameworks: ["SIT", "UAT", "Bank Mandiri"],
+    status: "PASSED",
+    impact:
+      "Tested Workflow Management (BOC, ECO), Loan Origination (KPR), and Robocall systems ensuring seamless transaction posting.",
+    assignee: "Muhammad Raihan",
     priority: "HIGH",
   },
   {
-    id: "QA-5117",
-    name: "Native iOS & Android App",
-    summary: "Cross-platform UI automation for core user journeys on real device cloud infrastructure.",
-    frameworks: ["Appium", "WebdriverIO", "BrowserStack"],
-    status: "PASSED",
-    impact: "90% test coverage across 8 device/OS configurations",
-    assignee: "A. Rivera",
+    id: "QA-9003",
+    name: "API Validation Suite",
+    summary: "Deep API integration tests with backend database validation and contract checks.",
+    frameworks: ["Postman", "Oracle SQL", "API Testing"],
+    status: "RETRIED",
+    impact:
+      "Conducted deep API integration sanity tests combined with direct backend database validation using Oracle SQL.",
+    assignee: "Muhammad Raihan",
     priority: "HIGH",
   },
 ];
@@ -72,54 +107,52 @@ const PROJECTS: Project[] = [
 const SKILL_CATEGORIES: SkillCategory[] = [
   {
     icon: <Monitor size={18} />,
-    title: "Frontend Testing",
+    title: "Frontend & Manual Testing",
     skills: [
-      { name: "Selenium WebDriver", level: 96 },
-      { name: "Cypress", level: 88 },
-      { name: "Playwright", level: 82 },
-      { name: "TestNG / JUnit", level: 94 },
+      { name: "Manual QA Testing", level: 96 },
+      { name: "Test Case & Scenario Design", level: 94 },
+      { name: "SIT & UAT Testing", level: 90 },
+      { name: "Basic Selenium Java", level: 45 },
     ],
-    tools: ["Allure", "ExtentReports", "Sauce Labs"],
+    tools: ["Manual Processes", "Checklists", "Exploratory"],
   },
   {
     icon: <Server size={18} />,
     title: "Backend / API Validation",
     skills: [
-      { name: "Postman / Newman", level: 97 },
-      { name: "REST Assured", level: 90 },
-      { name: "k6 Load Testing", level: 79 },
-      { name: "Contract Testing", level: 85 },
+      { name: "API Testing / Postman", level: 95 },
+      { name: "Sanity & Smoke Testing", level: 92 },
+      { name: "PTR Test", level: 88 },
     ],
-    tools: ["Pact", "Swagger", "WireMock"],
+    tools: ["Postman", "Newman", "REST tools"],
   },
   {
     icon: <Database size={18} />,
-    title: "Databases / SQL",
+    title: "Databases & Core Skills",
     skills: [
-      { name: "PostgreSQL", level: 88 },
-      { name: "MySQL", level: 85 },
-      { name: "Test Data Management", level: 91 },
-      { name: "Data Validation", level: 93 },
+      { name: "Oracle SQL Validation", level: 90 },
+      { name: "Postgres SQL", level: 85 },
+      { name: "PHP Laravel", level: 75 },
+      { name: "Data Analysis", level: 80 },
     ],
-    tools: ["DBeaver", "Flyway", "Liquibase"],
+    tools: ["Oracle", "pgAdmin", "SQL Tools"],
   },
   {
     icon: <GitBranch size={18} />,
-    title: "DevOps / CI-CD",
+    title: "Tools & Ecosystem",
     skills: [
-      { name: "Jenkins Pipelines", level: 87 },
-      { name: "GitHub Actions", level: 92 },
-      { name: "Docker Containers", level: 80 },
-      { name: "JIRA / Xray", level: 95 },
+      { name: "JIRA Defect Management", level: 95 },
+      { name: "Git / GitHub Actions", level: 90 },
+      { name: "Katalon Studio", level: 60 },
     ],
-    tools: ["SonarQube", "ArgoCD", "Grafana"],
+    tools: ["JIRA", "GitHub Actions", "Katalon"],
   },
 ];
 
 const LOG_LINES = [
   { type: "info", text: "Initializing test runner — TestNG 7.8.0" },
   { type: "info", text: "Loading configuration from testng.xml..." },
-  { type: "info", text: "Detected 3 test suites, 247 test methods" },
+  { type: "info", text: "Detected 3 test suites, 24,847 test methods" },
   { type: "pass", text: "[PASS] CheckoutFlow.testAddToCart — 312ms" },
   { type: "pass", text: "[PASS] CheckoutFlow.testApplyCoupon — 189ms" },
   { type: "pass", text: "[PASS] AuthSuite.testLoginValid — 244ms" },
@@ -129,7 +162,7 @@ const LOG_LINES = [
   { type: "pass", text: "[PASS] APIValidation.testOrderSchema — 102ms" },
   { type: "pass", text: "[PASS] MobileSuite.testOnboardingFlow — 1.2s" },
   { type: "info", text: "─────────────────────────────────────────────" },
-  { type: "pass", text: "Tests run: 247  |  Passed: 246  |  Retried: 1  |  Failed: 0" },
+  { type: "pass", text: "Tests run: 24,847  |  Passed: 24,846  |  Retried: 1  |  Failed: 0" },
   { type: "info", text: "Bug detection rate: 99.3%  |  Build: STABLE" },
   { type: "pass", text: "✓ Pipeline completed in 4m 31s — All gates green" },
 ];
@@ -140,7 +173,7 @@ function NavBar({ activeSection }: { activeSection: string }) {
   const links = [
     { label: "Home", href: "#home" },
     { label: "Test Suite", href: "#projects" },
-    { label: "Bug Log", href: "#projects" },
+    { label: "Bug Log", href: "#bug-log" },
     { label: "Tech Stack", href: "#techstack" },
   ];
 
@@ -365,6 +398,13 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
             >
               // QA PORTFOLIO
             </span>
+
+            <div style={{ marginTop: 8 }}>
+              <div style={{ color: "#E8E8F0", fontSize: "0.95rem", fontWeight: 700 }}>Muhammad Raihan Mubaroq</div>
+              <div style={{ color: "#6C7086", fontSize: "0.72rem", fontFamily: "Inter, sans-serif" }}>
+                Quality Assurance Engineer (Manual & Test Design Specialist) • Bekasi, Indonesia
+              </div>
+            </div>
           </div>
 
           <h1
@@ -386,13 +426,14 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
               color: "#6C7086",
               fontSize: "0.85rem",
               lineHeight: 1.8,
-              maxWidth: "38ch",
+              maxWidth: "48ch",
               fontFamily: "Inter, sans-serif",
               margin: 0,
             }}
           >
-            Senior QA & Automation Engineer with 8+ years shipping bulletproof test infrastructure. I build the safety
-            net that lets teams deploy with confidence — every sprint.
+            Computer Engineering graduate and QA Engineer with 3+ years of experience ensuring high-quality software
+            delivery in banking, e-commerce, and POS Cashier sectors. Expert in Manual QA, integration/regression testing,
+            API Validation (Postman), and defect management (JIRA).
           </p>
 
           <div className="flex items-center gap-4">
@@ -626,6 +667,177 @@ function TestCasesSection() {
   );
 }
 
+// ─── Bug Logs Section ─────────────────────────────────────────────────────────
+function BugLogSection() {
+  const severityStyles: Record<BugLog["severity"], React.CSSProperties> = {
+    CRITICAL: {
+      background: "rgba(255, 72, 72, 0.14)",
+      color: "#FF5F57",
+      border: "1px solid rgba(255, 72, 72, 0.24)",
+    },
+    HIGH: {
+      background: "rgba(255, 145, 0, 0.14)",
+      color: "#FF9100",
+      border: "1px solid rgba(255, 145, 0, 0.24)",
+    },
+  };
+
+  const statusStyles: Record<BugLog["status"], React.CSSProperties> = {
+    RESOLVED: {
+      background: "rgba(74, 246, 38, 0.12)",
+      color: "#4AF626",
+      border: "1px solid rgba(74, 246, 38, 0.2)",
+    },
+    CLOSED: {
+      background: "rgba(74, 246, 38, 0.12)",
+      color: "#4AF626",
+      border: "1px solid rgba(74, 246, 38, 0.2)",
+    },
+  };
+
+  return (
+    <section id="bug-log" style={{ padding: "100px 0", background: "#1E1E24" }}>
+      <div className="max-w-7xl mx-auto px-8">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+          <div>
+            <p
+              style={{
+                color: "#6C7086",
+                fontSize: "0.72rem",
+                fontFamily: "'JetBrains Mono', monospace",
+                marginBottom: "8px",
+              }}
+            >
+              {"// BUG LOG DASHBOARD"}
+            </p>
+            <h2
+              style={{
+                color: "#E8E8F0",
+                fontSize: "1.8rem",
+                fontWeight: 700,
+                fontFamily: "'JetBrains Mono', monospace",
+                margin: "0 0 8px 0",
+              }}
+            >
+              Bug Log / Defect Tracking
+            </h2>
+            <p style={{ color: "#6C7086", fontSize: "0.82rem", fontFamily: "Inter, sans-serif", margin: 0 }}>
+              Real QA case studies with ticket-level tracking, status, and environment context.
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              background: "#121214",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: "999px",
+              padding: "10px 16px",
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
+          >
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: "#4AF626",
+                display: "inline-block",
+              }}
+            />
+            <span style={{ color: "#6C7086", fontSize: "0.72rem" }}>System Status:</span>
+            <span style={{ color: "#E8E8F0", fontSize: "0.72rem" }}>CONNECTED TO JIRA API</span>
+          </div>
+        </div>
+
+        <div
+          style={{
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: "10px",
+            overflow: "hidden",
+            background: "#141418",
+          }}
+        >
+          <table className="min-w-full font-mono" style={{ borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ color: "#6C7086", textTransform: "uppercase", fontSize: "0.72rem" }}>
+                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                  Bug ID
+                </th>
+                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                  Technical Summary
+                </th>
+                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                  Environment
+                </th>
+                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                  Severity
+                </th>
+                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {BUG_LOGS.map((bug, index) => (
+                <tr
+                  key={bug.id}
+                  style={{
+                    borderTop: index === 0 ? "none" : "1px solid rgba(255,255,255,0.08)",
+                    background: index % 2 === 0 ? "#1E1E24" : "#18181D",
+                  }}
+                >
+                  <td style={{ padding: "16px 18px", color: "#00E5FF", fontWeight: 600 }}>{bug.id}</td>
+                  <td style={{ padding: "16px 18px", color: "#C0C0CC", maxWidth: "42ch", whiteSpace: "normal" }}>
+                    {bug.title}
+                  </td>
+                  <td style={{ padding: "16px 18px", color: "#6C7086" }}>{bug.environment}</td>
+                  <td style={{ padding: "16px 18px" }}>
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "6px 10px",
+                        borderRadius: "999px",
+                        fontSize: "0.72rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.04em",
+                        ...severityStyles[bug.severity],
+                      }}
+                    >
+                      {bug.severity}
+                    </span>
+                  </td>
+                  <td style={{ padding: "16px 18px" }}>
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "6px 10px",
+                        borderRadius: "999px",
+                        fontSize: "0.72rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.04em",
+                        ...statusStyles[bug.status],
+                      }}
+                    >
+                      {bug.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Skill Card ───────────────────────────────────────────────────────────────
 
 function SkillCard({ category }: { category: SkillCategory }) {
@@ -737,6 +949,172 @@ function TechStackSection() {
           {SKILL_CATEGORIES.map((cat) => (
             <SkillCard key={cat.title} category={cat} />
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Terminal Command Console Mini ────────────────────────────────────────────
+
+function TerminalCommandConsoleMini() {
+  const [command, setCommand] = useState("");
+  const [history, setHistory] = useState<string[]>(["Type 'help' for available commands."]);
+  const terminalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [history]);
+
+  const handleCommand = (input: string) => {
+    const normalized = input.trim();
+    if (!normalized) return;
+
+    const commandKey = normalized.toLowerCase();
+    let response: string;
+
+    switch (commandKey) {
+      case "help":
+        response = "Available commands: clear, bio, skills, test-suite";
+        break;
+      case "clear":
+        setHistory(["Type 'help' for available commands."]);
+        return;
+      case "bio":
+        response =
+          "Computer Engineering graduate and Quality Assurance Engineer with 3+ years of experience ensuring high-quality software delivery in banking, e-commerce, and POS Cashier sectors. Expert in Manual QA (functional, integration, regression, sanity, smoke, PTR), defect management via JIRA, and API testing using Postman. Technically proficient in Oracle SQL and PostgreSQL database validation, with intermediate knowledge of PHP Laravel, while actively developing automation skills using Katalon Studio and Selenium Java.";
+        break;
+      case "skills":
+        response =
+          "Core Capabilities: Advanced Manual QA, API Testing (Postman), Bug Tracking (JIRA), Database Validation (Oracle SQL & Postgres SQL), basic Automation Frameworks.";
+        break;
+      case "test-suite":
+        response =
+          "System Health Check: 24,847 Tests Run | 99.3% Bug Detection Rate | System Status: STABLE.";
+        break;
+      default:
+        response = `Command not found: ${normalized}. Type 'help' for available commands.`;
+    }
+
+    setHistory((prev) => [...prev, `raihan@qa-terminal:~$ ${normalized}`, response]);
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleCommand(command);
+      setCommand("");
+    }
+  };
+
+  return (
+    <section style={{ padding: "60px 0", background: "#09090b" }}>
+      <div className="max-w-7xl mx-auto px-8">
+        <div
+          style={{
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: "14px",
+            background: "#09090b",
+            padding: "22px",
+            fontFamily: "'JetBrains Mono', monospace",
+          }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div
+                style={{
+                  color: "#6C7086",
+                  fontSize: "0.72rem",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                }}
+              >
+                // TERMINAL CONSOLE MINI
+              </div>
+              <h3 style={{ color: "#E8E8F0", fontSize: "1.35rem", margin: "8px 0 0" }}>
+                Interactive QA Command Console
+              </h3>
+            </div>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "999px",
+                padding: "8px 12px",
+                color: "#6C7086",
+                fontSize: "0.72rem",
+              }}
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: "#4AF626",
+                  display: "inline-block",
+                }}
+              />
+              Live Terminal
+            </div>
+          </div>
+
+          <div
+            ref={terminalRef}
+            className="overflow-y-auto"
+            style={{
+              maxHeight: "16rem",
+              padding: "16px",
+              background: "#09090b",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: "10px",
+              color: "#C0C0CC",
+              fontSize: "0.82rem",
+              lineHeight: 1.6,
+              marginBottom: "18px",
+            }}
+          >
+            {history.map((entry, index) => (
+              <div key={`${entry}-${index}`} style={{ marginBottom: "0.6rem" }}>
+                <span style={{ color: entry.startsWith("raihan@qa-terminal") ? "#4AF626" : "#00E5FF" }}>
+                  {entry}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              background: "#0B0B0D",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: "10px",
+              padding: "12px 14px",
+            }}
+          >
+            <span style={{ color: "#4AF626", fontSize: "0.92rem", letterSpacing: "0.06em" }}>
+              raihan@qa-terminal:~$
+            </span>
+            <input
+              value={command}
+              onChange={(event) => setCommand(event.target.value)}
+              onKeyDown={onKeyDown}
+              placeholder="Type a command and press Enter"
+              className="w-full bg-transparent outline-none font-mono"
+              style={{
+                color: "#E8E8F0",
+                border: "none",
+                fontSize: "0.92rem",
+                letterSpacing: "0.01em",
+              }}
+            />
+          </div>
         </div>
       </div>
     </section>
@@ -876,26 +1254,49 @@ function Footer() {
     >
       <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
         <span style={{ color: "#4AF626", fontWeight: 700, fontSize: "0.9rem", letterSpacing: "0.12em" }}>[ QA ]</span>
-        <p style={{ color: "#3A3A4A", fontSize: "0.68rem", letterSpacing: "0.08em", margin: 0 }}>
-          © 2024 · All tests passing · Build #4821 ·{" "}
-          <span style={{ color: "#4AF626" }}>STABLE</span>
-        </p>
+          <p style={{ color: "#3A3A4A", fontSize: "0.68rem", letterSpacing: "0.08em", margin: 0 }}>
+            © 2026 - All tests passing. Build #4021 - {" "}
+            <span style={{ color: "#4AF626" }}>STABLE</span>
+          </p>
         <div className="flex gap-6">
-          {["GitHub", "LinkedIn", "Resume"].map((l) => (
-            <a
-              key={l}
-              href="#"
-              style={{ color: "#6C7086", fontSize: "0.7rem", textDecoration: "none", transition: "color 0.2s" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#00E5FF";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#6C7086";
-              }}
-            >
-              {l}
-            </a>
-          ))}
+          <a
+            href="https://github.com/raihanmbrq/portfolio-qa-engineer-v2"
+            style={{ color: "#6C7086", fontSize: "0.7rem", textDecoration: "none", transition: "color 0.2s" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#00E5FF";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#6C7086";
+            }}
+          >
+            GitHub
+          </a>
+
+          <a
+            href="#"
+            style={{ color: "#6C7086", fontSize: "0.7rem", textDecoration: "none", transition: "color 0.2s" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#00E5FF";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#6C7086";
+            }}
+          >
+            LinkedIn
+          </a>
+
+          <a
+            href="#"
+            style={{ color: "#6C7086", fontSize: "0.7rem", textDecoration: "none", transition: "color 0.2s" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#00E5FF";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#6C7086";
+            }}
+          >
+            Resume
+          </a>
         </div>
       </div>
     </footer>
@@ -925,7 +1326,9 @@ export default function App() {
       <NavBar activeSection={activeSection} />
       <HeroSection onRunTest={handleRunTest} />
       <TestCasesSection />
+      <BugLogSection />
       <TechStackSection />
+      <TerminalCommandConsoleMini />
       <Footer />
       <ConsoleDrawer open={consoleOpen} onClose={() => setConsoleOpen(false)} />
     </div>
