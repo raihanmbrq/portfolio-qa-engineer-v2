@@ -466,7 +466,7 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
               Run Test Suite
             </button>
             <a
-              href="/resume-muhammad-raihan-mubaroq.pdf"
+              href="/CV_Muhammad_Raihan_Mubaroq_ATS.pdf"
               target="_blank"
               rel="noopener noreferrer"
               download
@@ -1557,7 +1557,7 @@ function Footer() {
           </a>
 
           <a
-            href="#"
+            href="https://www.linkedin.com/in/muhammadraihanmubaroq/"
             style={{ color: "#6C7086", fontSize: "0.7rem", textDecoration: "none", transition: "color 0.2s" }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.color = "#00E5FF";
@@ -1570,7 +1570,10 @@ function Footer() {
           </a>
 
           <a
-            href="#"
+            href="/CV_Muhammad_Raihan_Mubaroq_ATS.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download
             style={{ color: "#6C7086", fontSize: "0.7rem", textDecoration: "none", transition: "color 0.2s" }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.color = "#00E5FF";
