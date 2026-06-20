@@ -12,6 +12,7 @@ import {
   Shield,
   Activity,
   ChevronRight,
+  Download,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -172,8 +173,10 @@ const LOG_LINES = [
 function NavBar({ activeSection }: { activeSection: string }) {
   const links = [
     { label: "Home", href: "#home" },
+    { label: "Experience", href: "#experience" },
     { label: "Test Suite", href: "#projects" },
     { label: "Bug Log", href: "#bug-log" },
+    { label: "Education", href: "#education" },
     { label: "Tech Stack", href: "#techstack" },
   ];
 
@@ -436,7 +439,7 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
             API Validation (Postman), and defect management (JIRA).
           </p>
 
-          <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4">
             <button
               onClick={onRunTest}
               className="flex items-center gap-2 px-6 py-3 rounded-sm font-bold"
@@ -463,17 +466,33 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
               Run Test Suite
             </button>
             <a
-              href="#projects"
-              className="flex items-center gap-1"
-              style={{ color: "#6C7086", fontSize: "0.78rem", textDecoration: "none", transition: "color 0.2s" }}
+              href="/resume-muhammad-raihan-mubaroq.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+              className="flex items-center gap-2 px-6 py-3 rounded-sm font-mono"
+              style={{
+                color: "#00E5FF",
+                fontSize: "0.82rem",
+                letterSpacing: "0.08em",
+                border: "1px solid rgba(0,229,255,0.3)",
+                background: "transparent",
+                cursor: "pointer",
+                fontFamily: "'JetBrains Mono', monospace",
+                transition: "all 0.2s ease",
+                textDecoration: "none",
+              }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#00E5FF";
+                (e.currentTarget as HTMLElement).style.background = "rgba(0,229,255,0.08)";
+                (e.currentTarget as HTMLElement).style.borderColor = "#00E5FF";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#6C7086";
+                (e.currentTarget as HTMLElement).style.background = "transparent";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,229,255,0.3)";
               }}
             >
-              View Projects <ChevronRight size={14} />
+              <Download size={14} />
+              Download CV
             </a>
           </div>
 
@@ -628,7 +647,7 @@ function ProjectCard({ project }: { project: Project }) {
 
 function TestCasesSection() {
   return (
-    <section id="projects" style={{ padding: "100px 0", background: "#0F0F12" }}>
+    <section id="projects" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
       <div className="max-w-7xl mx-auto px-8">
         <div className="mb-12">
           <p
@@ -696,7 +715,7 @@ function BugLogSection() {
   };
 
   return (
-    <section id="bug-log" style={{ padding: "100px 0", background: "#1E1E24" }}>
+    <section id="bug-log" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
       <div className="max-w-7xl mx-auto px-8">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
           <div>
@@ -916,7 +935,7 @@ function SkillCard({ category }: { category: SkillCategory }) {
 
 function TechStackSection() {
   return (
-    <section id="techstack" style={{ padding: "100px 0", background: "#121214" }}>
+    <section id="techstack" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
       <div className="max-w-7xl mx-auto px-8">
         <div className="mb-12">
           <p
@@ -948,6 +967,271 @@ function TechStackSection() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "20px" }}>
           {SKILL_CATEGORIES.map((cat) => (
             <SkillCard key={cat.title} category={cat} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Work Experience Section ──────────────────────────────────────────────────
+
+interface WorkExperienceItem {
+  company: string;
+  role: string;
+  period: string;
+  location: string;
+  description: string[];
+}
+
+const WORK_EXPERIENCES: WorkExperienceItem[] = [
+  {
+    company: "PT Tunas Digital Indonesia",
+    role: "Quality Assurance Tester",
+    period: "October 2025 – Present",
+    location: "Tangerang, Indonesia",
+    description: [
+      "Performed comprehensive testing for e-commerce, POS cashier applications, and education job portal apps.",
+      "Planned and managed daily testing activities, strategies, and stakeholder progress reporting.",
+      "Developed and maintained test scripts for application stability.",
+      "Executed Sanity Testing, SIT, UAT, and PTR.",
+      "Identified and tracked defects using structured documentation.",
+    ],
+  },
+  {
+    company: "PT Bahtera Pesat Lintas Buana",
+    role: "Quality Assurance Tester",
+    period: "April 2023 – September 2025",
+    location: "Client: PT Bank Mandiri Tbk.",
+    description: [
+      "Tested Workflow Management (BOC, ECO), Loan Origination (KPR), and Robocall systems.",
+      "Conducted SIT, UAT, and PTR to ensure seamless transaction posting and cash management.",
+      "Created systematic testing documentation and detailed bug reports.",
+      "Authored test scripts to standardize application validation.",
+    ],
+  },
+  {
+    company: "PT Equator Century Aliansi",
+    role: "System Implementer Specialist",
+    period: "September 2022 – August 2023",
+    location: "Indonesia",
+    description: ["Implemented and configured enterprise systems for optimal performance."],
+  },
+  {
+    company: "Arkanindo",
+    role: "IT Infrastructure",
+    period: "July 2021 – August 2021",
+    location: "Indonesia",
+    description: ["Managed IT infrastructure and system operations."],
+  },
+  {
+    company: "Bina Fiandra Jakatama & Partners",
+    role: "System Administrator",
+    period: "October 2020 – July 2021",
+    location: "Indonesia",
+    description: ["Administered and maintained enterprise systems."],
+  },
+];
+
+function WorkExperienceSection() {
+  return (
+    <section id="experience" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
+      <div className="max-w-7xl mx-auto px-8">
+        <div className="mb-12">
+          <p
+            style={{
+              color: "#6C7086",
+              fontSize: "0.72rem",
+              fontFamily: "'JetBrains Mono', monospace",
+              marginBottom: "8px",
+            }}
+          >
+            {"// HISTORY / WORK_EXPERIENCE.json"}
+          </p>
+          <h2
+            style={{
+              color: "#E8E8F0",
+              fontSize: "1.8rem",
+              fontWeight: 700,
+              fontFamily: "'JetBrains Mono', monospace",
+              margin: "0 0 8px 0",
+            }}
+          >
+            Work Experience
+          </h2>
+          <p style={{ color: "#6C7086", fontSize: "0.82rem", fontFamily: "Inter, sans-serif", margin: 0 }}>
+            Professional journey through QA, banking, and infrastructure domains.
+          </p>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          {WORK_EXPERIENCES.map((exp, index) => (
+            <div
+              key={exp.company}
+              style={{
+                background: "#1E1E24",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "8px",
+                padding: "20px",
+                fontFamily: "'JetBrains Mono', monospace",
+                position: "relative",
+              }}
+            >
+              {index !== WORK_EXPERIENCES.length - 1 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "28px",
+                    top: "60px",
+                    width: "2px",
+                    height: "calc(100% + 20px)",
+                    background: "linear-gradient(180deg, #4AF626 0%, transparent 100%)",
+                  }}
+                />
+              )}
+
+              <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
+                <div
+                  style={{
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    background: "#4AF626",
+                    flexShrink: 0,
+                    marginTop: "6px",
+                  }}
+                />
+
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "4px" }}>
+                    <span style={{ color: "#00E5FF", fontSize: "0.95rem", fontWeight: 600 }}>
+                      {exp.company}
+                    </span>
+                    <span style={{ color: "#6C7086", fontSize: "0.72rem" }}>
+                      {exp.period}
+                    </span>
+                  </div>
+
+                  <div style={{ marginBottom: "8px" }}>
+                    <span style={{ color: "#E8E8F0", fontSize: "0.88rem", fontWeight: 500 }}>
+                      {exp.role}
+                    </span>
+                    <span style={{ color: "#6C7086", fontSize: "0.78rem", marginLeft: "12px" }}>
+                      {exp.location}
+                    </span>
+                  </div>
+
+                  <div style={{ marginTop: "12px" }}>
+                    {exp.description.map((desc, i) => (
+                      <div key={i} style={{ color: "#A0A0B0", fontSize: "0.78rem", lineHeight: "1.6", marginBottom: "6px", fontFamily: "Inter, sans-serif" }}>
+                        • {desc}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Education Section ───────────────────────────────────────────────────────
+
+interface EducationItem {
+  institution: string;
+  degree: string;
+  year: string;
+  tags: string[];
+}
+
+const EDUCATION: EducationItem[] = [
+  {
+    institution: "Telkom University",
+    degree: "Bachelor of Computer Engineering",
+    year: "Class of 2022",
+    tags: ["Software Engineering", "Networking", "Data Validation", "Systems Architecture"],
+  },
+];
+
+function EducationSection() {
+  return (
+    <section id="education" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
+      <div className="max-w-7xl mx-auto px-8">
+        <div className="mb-12">
+          <p
+            style={{
+              color: "#6C7086",
+              fontSize: "0.72rem",
+              fontFamily: "'JetBrains Mono', monospace",
+              marginBottom: "8px",
+            }}
+          >
+            {"// ACADEMIC / EDUCATION.md"}
+          </p>
+          <h2
+            style={{
+              color: "#E8E8F0",
+              fontSize: "1.8rem",
+              fontWeight: 700,
+              fontFamily: "'JetBrains Mono', monospace",
+              margin: "0 0 8px 0",
+            }}
+          >
+            Education
+          </h2>
+          <p style={{ color: "#6C7086", fontSize: "0.82rem", fontFamily: "Inter, sans-serif", margin: 0 }}>
+            Academic foundation in Computer Engineering with focus on systems and data architecture.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(1, 1fr)", gap: "20px" }}>
+          {EDUCATION.map((edu) => (
+            <div
+              key={edu.institution}
+              style={{
+                background: "#1E1E24",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "8px",
+                padding: "28px",
+                fontFamily: "'JetBrains Mono', monospace",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
+                <div>
+                  <h3 style={{ color: "#00E5FF", fontSize: "1rem", fontWeight: 600, margin: "0 0 4px 0" }}>
+                    {edu.institution}
+                  </h3>
+                  <p style={{ color: "#E8E8F0", fontSize: "0.92rem", fontWeight: 500, margin: 0 }}>
+                    {edu.degree}
+                  </p>
+                </div>
+                <span style={{ color: "#6C7086", fontSize: "0.82rem", fontFamily: "Inter, sans-serif" }}>
+                  {edu.year}
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {edu.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    style={{
+                      background: "rgba(0,229,255,0.08)",
+                      border: "1px solid rgba(0,229,255,0.2)",
+                      color: "#00E5FF",
+                      fontSize: "0.7rem",
+                      padding: "6px 10px",
+                      borderRadius: "4px",
+                      letterSpacing: "0.03em",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -1010,7 +1294,7 @@ function TerminalCommandConsoleMini() {
   };
 
   return (
-    <section style={{ padding: "60px 0", background: "#09090b" }}>
+    <section style={{ padding: "60px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
       <div className="max-w-7xl mx-auto px-8">
         <div
           style={{
@@ -1307,7 +1591,39 @@ function Footer() {
 
 export default function App() {
   const [consoleOpen, setConsoleOpen] = useState(false);
-  const [activeSection] = useState("Home");
+  const [activeSection, setActiveSection] = useState("Home");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = [
+        { id: "home", label: "Home" },
+        { id: "projects", label: "Test Suite" },
+        { id: "bug-log", label: "Bug Log" },
+        { id: "experience", label: "Experience" },
+        { id: "education", label: "Education" },
+        { id: "techstack", label: "Tech Stack" },
+      ];
+
+      let currentSection = "Home";
+      const viewportCenter = window.innerHeight / 2;
+
+      for (const section of sections) {
+        const element = document.getElementById(section.id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= viewportCenter && rect.bottom >= viewportCenter) {
+            currentSection = section.label;
+            break;
+          }
+        }
+      }
+
+      setActiveSection(currentSection);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleRunTest = () => {
     setConsoleOpen(true);
@@ -1325,8 +1641,10 @@ export default function App() {
     >
       <NavBar activeSection={activeSection} />
       <HeroSection onRunTest={handleRunTest} />
+      <WorkExperienceSection />
       <TestCasesSection />
       <BugLogSection />
+      <EducationSection />
       <TechStackSection />
       <TerminalCommandConsoleMini />
       <Footer />
