@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { AnimatePresence } from "motion/react";
+import Loader from "../components/Loader";
 import {
   Monitor,
   Server,
@@ -90,7 +92,7 @@ const PROJECTS: Project[] = [
     impact:
       "Tested Workflow Management (BOC, ECO), Loan Origination (KPR), and Robocall systems ensuring seamless transaction posting.",
     assignee: "Muhammad Raihan",
-    priority: "HIGH",
+    priority: "MEDIUM",
   },
   {
     id: "QA-9003",
@@ -1593,6 +1595,7 @@ function Footer() {
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const [consoleOpen, setConsoleOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("Home");
 
@@ -1634,24 +1637,36 @@ export default function App() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#121214",
-        fontFamily: "'JetBrains Mono', monospace",
-        overflowX: "hidden",
-      }}
-    >
-      <NavBar activeSection={activeSection} />
-      <HeroSection onRunTest={handleRunTest} />
-      <WorkExperienceSection />
-      <TestCasesSection />
-      <BugLogSection />
-      <EducationSection />
-      <TechStackSection />
-      <TerminalCommandConsoleMini />
-      <Footer />
-      <ConsoleDrawer open={consoleOpen} onClose={() => setConsoleOpen(false)} />
-    </div>
+    <>
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <Loader key="loader" onComplete={() => setIsLoading(false)} />
+        )}
+      </AnimatePresence>
+
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#121214",
+          fontFamily: "'JetBrains Mono', monospace",
+          overflowX: "hidden",
+          opacity: isLoading ? 0 : 1,
+          transition: "opacity 0.5s ease",
+          height: isLoading ? "100vh" : "auto",
+          overflow: isLoading ? "hidden" : "visible",
+        }}
+      >
+        <NavBar activeSection={activeSection} />
+        <HeroSection onRunTest={handleRunTest} />
+        <WorkExperienceSection />
+        <TestCasesSection />
+        <BugLogSection />
+        <EducationSection />
+        <TechStackSection />
+        <TerminalCommandConsoleMini />
+        <Footer />
+        <ConsoleDrawer open={consoleOpen} onClose={() => setConsoleOpen(false)} />
+      </div>
+    </>
   );
 }
