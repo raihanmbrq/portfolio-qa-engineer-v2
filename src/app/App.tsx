@@ -1225,7 +1225,7 @@ const WORK_EXPERIENCES: WorkExperienceItem[] = [
     ],
   },
   {
-    company: "PT Equator Century Aliansi",
+    company: "PT Signature Gemilang Nusantara",
     role: "System Implementer Specialist",
     period: "September 2022 – August 2023",
     location: "Indonesia",
@@ -1239,7 +1239,7 @@ const WORK_EXPERIENCES: WorkExperienceItem[] = [
     description: ["Managed IT infrastructure and system operations."],
   },
   {
-    company: "Bina Fiandra Jakatama & Partners",
+    company: "Witel Telkom Jakarta Timur",
     role: "System Administrator",
     period: "October 2020 – July 2021",
     location: "Indonesia",
