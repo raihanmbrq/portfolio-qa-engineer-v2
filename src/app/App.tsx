@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import Loader from "../components/Loader";
 import {
   Monitor,
@@ -15,6 +15,11 @@ import {
   Activity,
   ChevronRight,
   Download,
+  Menu,
+  CheckSquare,
+  Layers,
+  Cpu,
+  Terminal,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -170,9 +175,33 @@ const LOG_LINES = [
   { type: "pass", text: "✓ Pipeline completed in 4m 31s — All gates green" },
 ];
 
+// ─── Project Assets & Links ──────────────────────────────────────────────────
+
+const projectImages: Record<string, string> = {
+  "QA-9001": "/project-ecommerce.png",
+  "QA-9002": "/project-banking.png",
+  "QA-9003": "/project-api.png",
+};
+
+const projectLinks: Record<string, { github: string; demo: string }> = {
+  "QA-9001": {
+    github: "https://github.com/raihanmbrq/ecommerce-pos-qa",
+    demo: "https://ecommerce-pos-qa-demo.vercel.app",
+  },
+  "QA-9002": {
+    github: "https://github.com/raihanmbrq/banking-workflow-qa",
+    demo: "https://banking-workflow-qa-demo.vercel.app",
+  },
+  "QA-9003": {
+    github: "https://github.com/raihanmbrq/api-validation-suite",
+    demo: "https://api-validation-suite-demo.vercel.app",
+  },
+};
+
 // ─── NavBar ──────────────────────────────────────────────────────────────────
 
 function NavBar({ activeSection }: { activeSection: string }) {
+  const [isOpen, setIsOpen] = useState(false);
   const links = [
     { label: "Home", href: "#home" },
     { label: "Experience", href: "#experience" },
@@ -184,7 +213,7 @@ function NavBar({ activeSection }: { activeSection: string }) {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 h-14"
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 h-14"
       style={{
         background: "rgba(18,18,20,0.92)",
         backdropFilter: "blur(12px)",
@@ -199,7 +228,8 @@ function NavBar({ activeSection }: { activeSection: string }) {
         <span style={{ color: "#6C7086", fontSize: "0.7rem", letterSpacing: "0.08em" }}>v2.4.1</span>
       </div>
 
-      <div className="flex items-center gap-8">
+      {/* Desktop Menu */}
+      <div className="hidden md:flex items-center gap-8">
         {links.map((l) => (
           <a
             key={l.label}
@@ -223,8 +253,9 @@ function NavBar({ activeSection }: { activeSection: string }) {
         ))}
       </div>
 
+      {/* System Status - Desktop & Tablet */}
       <div
-        className="flex items-center gap-2 px-3 py-1 rounded-full"
+        className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full"
         style={{ background: "rgba(74,246,38,0.08)", border: "1px solid rgba(74,246,38,0.2)" }}
       >
         <span
@@ -235,6 +266,60 @@ function NavBar({ activeSection }: { activeSection: string }) {
           System Status: STABLE
         </span>
       </div>
+
+      {/* Mobile Menu Toggle Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex md:hidden items-center justify-center h-11 w-11 text-[#6C7086] hover:text-[#4AF626] transition-colors focus:outline-none"
+        style={{ cursor: "pointer", border: "none", background: "none" }}
+        aria-label="Toggle menu"
+      >
+        {isOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
+
+      {/* Mobile Navigation Drawer */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="absolute top-14 left-0 right-0 border-b border-[rgba(255,255,255,0.07)] backdrop-blur-lg flex flex-col items-center py-6 gap-4 md:hidden z-40 overflow-hidden"
+            style={{ background: "rgba(18,18,20,0.96)" }}
+          >
+            {links.map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                onClick={() => setIsOpen(false)}
+                className="w-full text-center py-3 text-sm transition-colors duration-200"
+                style={{
+                  color: activeSection === l.label ? "#4AF626" : "#E8E8F0",
+                  letterSpacing: "0.08em",
+                  textDecoration: "none",
+                  display: "block",
+                  minHeight: "44px", // Padded touch target
+                }}
+              >
+                {l.label}
+              </a>
+            ))}
+            <div
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full mt-2"
+              style={{ background: "rgba(74,246,38,0.08)", border: "1px solid rgba(74,246,38,0.2)" }}
+            >
+              <span
+                className="animate-pulse"
+                style={{ width: 6, height: 6, borderRadius: "50%", background: "#4AF626", display: "inline-block" }}
+              />
+              <span style={{ color: "#4AF626", fontSize: "0.68rem", letterSpacing: "0.1em" }}>
+                Status: STABLE
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
@@ -265,12 +350,11 @@ function IDEWindow() {
 
   return (
     <div
-      className="rounded-sm overflow-hidden flex flex-col"
+      className="rounded-sm overflow-hidden flex flex-col w-full h-[320px] sm:h-[420px]"
       style={{
         background: "#0D0D10",
         border: "1px solid rgba(255,255,255,0.1)",
         fontFamily: "'JetBrains Mono', monospace",
-        height: "420px",
         boxShadow: "0 0 40px rgba(0,229,255,0.06)",
       }}
     >
@@ -308,9 +392,9 @@ function IDEWindow() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3" style={{ scrollbarWidth: "none" }}>
+      <div className="flex-1 overflow-auto p-3" style={{ scrollbarWidth: "none" }}>
         {lines.map((line) => (
-          <div key={line.ln} className="flex items-start gap-4" style={{ minHeight: "1.5rem" }}>
+          <div key={line.ln} className="flex items-start gap-4 min-w-max" style={{ minHeight: "1.5rem" }}>
             <span
               style={{
                 color: "#3A3A4A",
@@ -354,20 +438,20 @@ function IDEWindow() {
 function MetricCard({ value, label, icon }: { value: string; label: string; icon: React.ReactNode }) {
   return (
     <div
-      className="flex-1 px-4 py-3 rounded-sm"
+      className="px-2 sm:px-4 py-3 rounded-sm flex flex-col justify-center text-center sm:text-left"
       style={{
         background: "#1E1E24",
         border: "1px solid rgba(255,255,255,0.08)",
         fontFamily: "'JetBrains Mono', monospace",
       }}
     >
-      <div className="flex items-center gap-2 mb-1">
+      <div className="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 mb-1">
         <span style={{ color: "#4AF626" }}>{icon}</span>
-        <span style={{ color: "#6C7086", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+        <span style={{ color: "#6C7086", fontSize: "0.52rem", sm: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
           {label}
         </span>
       </div>
-      <div style={{ color: "#E8E8F0", fontSize: "1.15rem", fontWeight: 700, letterSpacing: "-0.01em" }}>
+      <div className="text-sm sm:text-base md:text-lg font-bold" style={{ color: "#E8E8F0", letterSpacing: "-0.01em" }}>
         {value}
       </div>
     </div>
@@ -384,15 +468,15 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
       style={{ background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}
     >
       <div
-        className="w-full max-w-7xl mx-auto px-8 grid gap-12 items-center py-16"
+        className="w-full max-w-7xl mx-auto px-4 sm:px-8 flex flex-col-reverse lg:grid gap-8 lg:gap-12 items-center py-20 lg:py-16"
         style={{ gridTemplateColumns: "55fr 45fr" }}
       >
-        <div>
+        <div className="w-full">
           <IDEWindow />
         </div>
 
-        <div className="flex flex-col gap-6" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-          <div>
+        <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-6" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          <div className="flex flex-col items-center lg:items-start gap-4">
             <span
               style={{
                 color: "#6C7086",
@@ -404,20 +488,35 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
               // QA PORTFOLIO
             </span>
 
-            <div style={{ marginTop: 8 }}>
-              <div style={{ color: "#E8E8F0", fontSize: "0.95rem", fontWeight: 700 }}>Muhammad Raihan Mubaroq</div>
-              <div style={{ color: "#6C7086", fontSize: "0.72rem", fontFamily: "Inter, sans-serif" }}>
+            {/* Profile Picture */}
+            {/* <div className="relative flex-shrink-0 my-2">
+              <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-[#4AF626] shadow-[0_0_20px_rgba(74,246,38,0.3)]">
+                <img
+                  src="/avatar.png"
+                  alt="Muhammad Raihan Mubaroq"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+              <div className="absolute bottom-0 right-0 bg-[#121214] border border-[#4AF626] px-2 py-0.5 rounded-full text-[9px] text-[#4AF626] font-bold tracking-wider animate-pulse">
+                QA ACTIVE
+              </div>
+            </div> */}
+
+            <div>
+              <div style={{ color: "#E8E8F0", fontSize: "1rem", fontWeight: 700 }}>Muhammad Raihan Mubaroq</div>
+              <div style={{ color: "#6C7086", fontSize: "0.75rem", fontFamily: "Inter, sans-serif", marginTop: 4 }}>
                 Quality Assurance Engineer (Manual & Test Design Specialist) • Bekasi, Indonesia
               </div>
             </div>
           </div>
 
           <h1
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
             style={{
-              fontSize: "clamp(2rem, 3.5vw, 3.2rem)",
-              fontWeight: 700,
               color: "#E8E8F0",
-              lineHeight: 1.15,
               margin: 0,
             }}
           >
@@ -441,10 +540,10 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
             API Validation (Postman), and defect management (JIRA).
           </p>
 
-                    <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 w-full">
             <button
               onClick={onRunTest}
-              className="flex items-center gap-2 px-6 py-3 rounded-sm font-bold"
+              className="flex items-center justify-center gap-2 px-6 rounded-sm font-bold min-h-[44px] min-w-[150px]"
               style={{
                 background: "#4AF626",
                 color: "#121214",
@@ -472,7 +571,7 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
               target="_blank"
               rel="noopener noreferrer"
               download
-              className="flex items-center gap-2 px-6 py-3 rounded-sm font-mono"
+              className="flex items-center justify-center gap-2 px-6 rounded-sm font-mono min-h-[44px] min-w-[150px]"
               style={{
                 color: "#00E5FF",
                 fontSize: "0.82rem",
@@ -498,9 +597,9 @@ function HeroSection({ onRunTest }: { onRunTest: () => void }) {
             </a>
           </div>
 
-          <div className="flex gap-3 mt-2">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full mt-2">
             <MetricCard value="24,847" label="Tests Run" icon={<Activity size={12} />} />
-            <MetricCard value="99.3%" label="Bug Detection" icon={<Shield size={12} />} />
+            <MetricCard value="99.3%" label="Bug Rate" icon={<Shield size={12} />} />
             <MetricCard value="99.98%" label="Uptime" icon={<Zap size={12} />} />
           </div>
         </div>
@@ -537,6 +636,15 @@ function ProjectCard({ project }: { project: Project }) {
         cursor: "pointer",
       }}
     >
+      <div className="w-full h-44 overflow-hidden rounded-t-sm bg-[#161618]">
+        <img
+          src={projectImages[project.id] || "/project-ecommerce.png"}
+          alt={project.name}
+          className="w-full h-full object-cover transition-transform duration-300"
+          style={{ transform: hovered ? "scale(1.04)" : "scale(1)" }}
+        />
+      </div>
+
       <div
         style={{
           background: "#161618",
@@ -640,6 +748,38 @@ function ProjectCard({ project }: { project: Project }) {
           <span style={{ color: "#6C7086", fontSize: "0.65rem" }}>Assigned: {project.assignee}</span>
           <span style={{ color: "#3A3A4A", fontSize: "0.62rem" }}>Sprint 24</span>
         </div>
+
+        {/* TODO: Add code repo and live demo links here */}
+        {/* <div className="flex gap-2 mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]">
+          <a
+            href={projectLinks[project.id]?.github || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 rounded-sm border border-[rgba(0,229,255,0.3)] hover:border-[#00E5FF] hover:bg-[rgba(0,229,255,0.05)] text-[#00E5FF] transition-all"
+            style={{
+              fontSize: "0.68rem",
+              fontFamily: "'JetBrains Mono', monospace",
+              textDecoration: "none",
+              minHeight: "44px",
+            }}
+          >
+            <span className="font-bold">Code Repository</span>
+          </a>
+          <a
+            href={projectLinks[project.id]?.demo || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 rounded-sm border border-[rgba(74,246,38,0.3)] hover:border-[#4AF626] hover:bg-[rgba(74,246,38,0.05)] text-[#4AF626] transition-all"
+            style={{
+              fontSize: "0.68rem",
+              fontFamily: "'JetBrains Mono', monospace",
+              textDecoration: "none",
+              minHeight: "44px",
+            }}
+          >
+            <span className="font-bold">Live Demo</span>
+          </a>
+        </div> */}
       </div>
     </div>
   );
@@ -649,8 +789,8 @@ function ProjectCard({ project }: { project: Project }) {
 
 function TestCasesSection() {
   return (
-    <section id="projects" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
-      <div className="max-w-7xl mx-auto px-8">
+    <section id="projects" className="py-16 md:py-24" style={{ background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="mb-12">
           <p
             style={{
@@ -678,7 +818,7 @@ function TestCasesSection() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {PROJECTS.map((p) => (
             <ProjectCard key={p.id} project={p} />
           ))}
@@ -717,8 +857,8 @@ function BugLogSection() {
   };
 
   return (
-    <section id="bug-log" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
-      <div className="max-w-7xl mx-auto px-8">
+    <section id="bug-log" className="py-16 md:py-24" style={{ background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
           <div>
             <p
@@ -773,7 +913,58 @@ function BugLogSection() {
           </div>
         </div>
 
+        {/* Mobile bug card stack view (shown on < md) */}
+        <div className="flex flex-col gap-4 md:hidden">
+          {BUG_LOGS.map((bug) => (
+            <div
+              key={bug.id}
+              className="p-4 rounded-sm"
+              style={{
+                background: "#1E1E24",
+                border: "1px solid rgba(255,255,255,0.08)",
+                fontFamily: "'JetBrains Mono', monospace",
+              }}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span style={{ color: "#00E5FF", fontWeight: 600, fontSize: "0.82rem" }}>{bug.id}</span>
+                <span style={{ color: "#6C7086", fontSize: "0.68rem" }}>{bug.environment}</span>
+              </div>
+              
+              <div style={{ color: "#C0C0CC", fontSize: "0.78rem", lineHeight: 1.5, marginBottom: "16px" }}>
+                {bug.title}
+              </div>
+
+              <div className="flex items-center justify-between border-t border-[rgba(255,255,255,0.05)] pt-3">
+                <span
+                  style={{
+                    padding: "4px 8px",
+                    borderRadius: "2px",
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    ...severityStyles[bug.severity],
+                  }}
+                >
+                  {bug.severity}
+                </span>
+                <span
+                  style={{
+                    padding: "4px 8px",
+                    borderRadius: "2px",
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    ...statusStyles[bug.status],
+                  }}
+                >
+                  {bug.status}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop bug table view (shown on >= md) */}
         <div
+          className="hidden md:block"
           style={{
             border: "1px solid rgba(255,255,255,0.08)",
             borderRadius: "10px",
@@ -781,78 +972,80 @@ function BugLogSection() {
             background: "#141418",
           }}
         >
-          <table className="min-w-full font-mono" style={{ borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ color: "#6C7086", textTransform: "uppercase", fontSize: "0.72rem" }}>
-                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                  Bug ID
-                </th>
-                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                  Technical Summary
-                </th>
-                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                  Environment
-                </th>
-                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                  Severity
-                </th>
-                <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {BUG_LOGS.map((bug, index) => (
-                <tr
-                  key={bug.id}
-                  style={{
-                    borderTop: index === 0 ? "none" : "1px solid rgba(255,255,255,0.08)",
-                    background: index % 2 === 0 ? "#1E1E24" : "#18181D",
-                  }}
-                >
-                  <td style={{ padding: "16px 18px", color: "#00E5FF", fontWeight: 600 }}>{bug.id}</td>
-                  <td style={{ padding: "16px 18px", color: "#C0C0CC", maxWidth: "42ch", whiteSpace: "normal" }}>
-                    {bug.title}
-                  </td>
-                  <td style={{ padding: "16px 18px", color: "#6C7086" }}>{bug.environment}</td>
-                  <td style={{ padding: "16px 18px" }}>
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: "6px 10px",
-                        borderRadius: "999px",
-                        fontSize: "0.72rem",
-                        fontWeight: 700,
-                        letterSpacing: "0.04em",
-                        ...severityStyles[bug.severity],
-                      }}
-                    >
-                      {bug.severity}
-                    </span>
-                  </td>
-                  <td style={{ padding: "16px 18px" }}>
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: "6px 10px",
-                        borderRadius: "999px",
-                        fontSize: "0.72rem",
-                        fontWeight: 700,
-                        letterSpacing: "0.04em",
-                        ...statusStyles[bug.status],
-                      }}
-                    >
-                      {bug.status}
-                    </span>
-                  </td>
+          <div className="w-full overflow-x-auto">
+            <table className="min-w-full font-mono" style={{ borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ color: "#6C7086", textTransform: "uppercase", fontSize: "0.72rem" }}>
+                  <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                    Bug ID
+                  </th>
+                  <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                    Technical Summary
+                  </th>
+                  <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                    Environment
+                  </th>
+                  <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                    Severity
+                  </th>
+                  <th style={{ padding: "18px 18px", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                    Status
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {BUG_LOGS.map((bug, index) => (
+                  <tr
+                    key={bug.id}
+                    style={{
+                      borderTop: index === 0 ? "none" : "1px solid rgba(255,255,255,0.08)",
+                      background: index % 2 === 0 ? "#1E1E24" : "#18181D",
+                    }}
+                  >
+                    <td style={{ padding: "16px 18px", color: "#00E5FF", fontWeight: 600 }}>{bug.id}</td>
+                    <td style={{ padding: "16px 18px", color: "#C0C0CC", maxWidth: "42ch", whiteSpace: "normal" }}>
+                      {bug.title}
+                    </td>
+                    <td style={{ padding: "16px 18px", color: "#6C7086" }}>{bug.environment}</td>
+                    <td style={{ padding: "16px 18px" }}>
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          padding: "6px 10px",
+                          borderRadius: "999px",
+                          fontSize: "0.72rem",
+                          fontWeight: 700,
+                          letterSpacing: "0.04em",
+                          ...severityStyles[bug.severity],
+                        }}
+                      >
+                        {bug.severity}
+                      </span>
+                    </td>
+                    <td style={{ padding: "16px 18px" }}>
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          padding: "6px 10px",
+                          borderRadius: "999px",
+                          fontSize: "0.72rem",
+                          fontWeight: 700,
+                          letterSpacing: "0.04em",
+                          ...statusStyles[bug.status],
+                        }}
+                      >
+                        {bug.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -860,6 +1053,26 @@ function BugLogSection() {
 }
 
 // ─── Skill Card ───────────────────────────────────────────────────────────────
+
+const getToolIcon = (toolName: string) => {
+  const lower = toolName.toLowerCase();
+  if (lower.includes("manual") || lower.includes("process") || lower.includes("checklist") || lower.includes("exploratory")) {
+    return <CheckSquare size={12} className="text-[#4AF626] flex-shrink-0" />;
+  }
+  if (lower.includes("postman") || lower.includes("newman") || lower.includes("rest")) {
+    return <Terminal size={12} className="text-[#00E5FF] flex-shrink-0" />;
+  }
+  if (lower.includes("oracle") || lower.includes("sql") || lower.includes("pgadmin")) {
+    return <Database size={12} className="text-[#FF9100] flex-shrink-0" />;
+  }
+  if (lower.includes("git") || lower.includes("github")) {
+    return <GitBranch size={12} className="text-[#4AF626] flex-shrink-0" />;
+  }
+  if (lower.includes("katalon") || lower.includes("selenium")) {
+    return <Cpu size={12} className="text-[#00E5FF] flex-shrink-0" />;
+  }
+  return <Layers size={12} className="text-[#6C7086] flex-shrink-0" />;
+};
 
 function SkillCard({ category }: { category: SkillCategory }) {
   return (
@@ -911,21 +1124,20 @@ function SkillCard({ category }: { category: SkillCategory }) {
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {category.tools.map((t) => (
           <span
             key={t}
+            className="flex items-center gap-1.5 px-2 py-1.5 rounded-sm border border-[rgba(255,255,255,0.06)]"
             style={{
               background: "#2A2A32",
-              color: "#6C7086",
-              fontSize: "0.62rem",
-              padding: "2px 8px",
-              borderRadius: "2px",
-              border: "1px solid rgba(255,255,255,0.06)",
+              color: "#A0A0B0",
+              fontSize: "0.65rem",
               letterSpacing: "0.04em",
             }}
           >
-            {t}
+            {getToolIcon(t)}
+            <span className="truncate">{t}</span>
           </span>
         ))}
       </div>
@@ -937,8 +1149,8 @@ function SkillCard({ category }: { category: SkillCategory }) {
 
 function TechStackSection() {
   return (
-    <section id="techstack" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
-      <div className="max-w-7xl mx-auto px-8">
+    <section id="techstack" className="py-16 md:py-24" style={{ background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="mb-12">
           <p
             style={{
@@ -966,7 +1178,7 @@ function TechStackSection() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "20px" }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {SKILL_CATEGORIES.map((cat) => (
             <SkillCard key={cat.title} category={cat} />
           ))}
@@ -1037,8 +1249,8 @@ const WORK_EXPERIENCES: WorkExperienceItem[] = [
 
 function WorkExperienceSection() {
   return (
-    <section id="experience" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
-      <div className="max-w-7xl mx-auto px-8">
+    <section id="experience" className="py-16 md:py-24" style={{ background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="mb-12">
           <p
             style={{
@@ -1066,7 +1278,7 @@ function WorkExperienceSection() {
           </p>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div className="flex flex-col gap-6">
           {WORK_EXPERIENCES.map((exp, index) => (
             <div
               key={exp.company}
@@ -1086,7 +1298,7 @@ function WorkExperienceSection() {
                     left: "28px",
                     top: "60px",
                     width: "2px",
-                    height: "calc(100% + 20px)",
+                    height: "calc(100% + 24px)",
                     background: "linear-gradient(180deg, #4AF626 0%, transparent 100%)",
                   }}
                 />
@@ -1105,7 +1317,7 @@ function WorkExperienceSection() {
                 />
 
                 <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "4px" }}>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 mb-2">
                     <span style={{ color: "#00E5FF", fontSize: "0.95rem", fontWeight: 600 }}>
                       {exp.company}
                     </span>
@@ -1114,11 +1326,11 @@ function WorkExperienceSection() {
                     </span>
                   </div>
 
-                  <div style={{ marginBottom: "8px" }}>
+                  <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 mb-2">
                     <span style={{ color: "#E8E8F0", fontSize: "0.88rem", fontWeight: 500 }}>
                       {exp.role}
                     </span>
-                    <span style={{ color: "#6C7086", fontSize: "0.78rem", marginLeft: "12px" }}>
+                    <span style={{ color: "#6C7086", fontSize: "0.78rem" }}>
                       {exp.location}
                     </span>
                   </div>
@@ -1160,8 +1372,8 @@ const EDUCATION: EducationItem[] = [
 
 function EducationSection() {
   return (
-    <section id="education" style={{ padding: "100px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
-      <div className="max-w-7xl mx-auto px-8">
+    <section id="education" className="py-16 md:py-24" style={{ background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="mb-12">
           <p
             style={{
@@ -1201,7 +1413,7 @@ function EducationSection() {
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                 <div>
                   <h3 style={{ color: "#00E5FF", fontSize: "1rem", fontWeight: 600, margin: "0 0 4px 0" }}>
                     {edu.institution}
@@ -1296,8 +1508,8 @@ function TerminalCommandConsoleMini() {
   };
 
   return (
-    <section style={{ padding: "60px 0", background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
-      <div className="max-w-7xl mx-auto px-8">
+    <section className="py-12 md:py-16" style={{ background: "linear-gradient(135deg, #121214 0%, #14141A 100%)" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div
           style={{
             border: "1px solid rgba(255,255,255,0.08)",
@@ -1307,7 +1519,7 @@ function TerminalCommandConsoleMini() {
             fontFamily: "'JetBrains Mono', monospace",
           }}
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
             <div>
               <div
                 style={{
@@ -1324,6 +1536,7 @@ function TerminalCommandConsoleMini() {
               </h3>
             </div>
             <div
+              className="self-start sm:self-center"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -1374,17 +1587,15 @@ function TerminalCommandConsoleMini() {
           </div>
 
           <div
+            className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
               background: "#0B0B0D",
               border: "1px solid rgba(255,255,255,0.08)",
               borderRadius: "10px",
               padding: "12px 14px",
             }}
           >
-            <span style={{ color: "#4AF626", fontSize: "0.92rem", letterSpacing: "0.06em" }}>
+            <span style={{ color: "#4AF626", fontSize: "0.85rem", sm: "0.92rem", letterSpacing: "0.06em", flexShrink: 0 }}>
               raihan@qa-terminal:~$
             </span>
             <input
@@ -1396,7 +1607,8 @@ function TerminalCommandConsoleMini() {
               style={{
                 color: "#E8E8F0",
                 border: "none",
-                fontSize: "0.92rem",
+                fontSize: "0.85rem",
+                sm: "0.92rem",
                 letterSpacing: "0.01em",
               }}
             />
@@ -1538,16 +1750,17 @@ function Footer() {
         fontFamily: "'JetBrains Mono', monospace",
       }}
     >
-      <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center">
         <span style={{ color: "#4AF626", fontWeight: 700, fontSize: "0.9rem", letterSpacing: "0.12em" }}>[ QA ]</span>
-          <p style={{ color: "#3A3A4A", fontSize: "0.68rem", letterSpacing: "0.08em", margin: 0 }}>
-            © 2026 - All tests passing. Build #4021 - {" "}
-            <span style={{ color: "#4AF626" }}>STABLE</span>
-          </p>
-        <div className="flex gap-6">
+        <p style={{ color: "#3A3A4A", fontSize: "0.68rem", letterSpacing: "0.08em", margin: 0 }}>
+          © 2026 - All tests passing. Build #4021 - {" "}
+          <span style={{ color: "#4AF626" }}>STABLE</span>
+        </p>
+        <div className="flex flex-wrap justify-center gap-6">
           <a
             href="https://github.com/raihanmbrq/portfolio-qa-engineer-v2"
-            style={{ color: "#6C7086", fontSize: "0.7rem", textDecoration: "none", transition: "color 0.2s" }}
+            className="flex items-center justify-center"
+            style={{ color: "#6C7086", fontSize: "0.78rem", textDecoration: "none", transition: "color 0.2s", minWidth: "44px", minHeight: "44px" }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.color = "#00E5FF";
             }}
@@ -1560,7 +1773,8 @@ function Footer() {
 
           <a
             href="https://www.linkedin.com/in/muhammadraihanmubaroq/"
-            style={{ color: "#6C7086", fontSize: "0.7rem", textDecoration: "none", transition: "color 0.2s" }}
+            className="flex items-center justify-center"
+            style={{ color: "#6C7086", fontSize: "0.78rem", textDecoration: "none", transition: "color 0.2s", minWidth: "44px", minHeight: "44px" }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.color = "#00E5FF";
             }}
@@ -1576,7 +1790,8 @@ function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             download
-            style={{ color: "#6C7086", fontSize: "0.7rem", textDecoration: "none", transition: "color 0.2s" }}
+            className="flex items-center justify-center"
+            style={{ color: "#6C7086", fontSize: "0.78rem", textDecoration: "none", transition: "color 0.2s", minWidth: "44px", minHeight: "44px" }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.color = "#00E5FF";
             }}
